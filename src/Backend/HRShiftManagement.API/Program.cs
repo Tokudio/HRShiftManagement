@@ -45,7 +45,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Seed initial administrator user if configured
+// Seed initial administrator user if configuredd
 try
 {
     using var scope = app.Services.CreateScope();
