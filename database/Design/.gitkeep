@@ -1,0 +1,10 @@
+Thông tin	Giá trị
+Email đăng nhập	admin@hrshift.local
+Mật khẩu đã dùng để đăng nhập thành công	HrShift@2026A
+Vai trò	Admin
+
+ "email": "employee01@example.com",
+  "password": "EmpTest@2026A",
+
+
+$ cd src/Frontend/hr-shift-management-ui
