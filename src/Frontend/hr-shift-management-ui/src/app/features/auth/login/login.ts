@@ -37,13 +37,17 @@ export class Login {
       password: this.password,
     }).subscribe({
       next: (response) => {
-        console.log('LOGIN NEXT: API trả về thành công');
-
         this.isLoading = false;
-        console.log('isLoading =', this.isLoading);
 
+        console.log('LOGIN NEXT: API trả về thành công');
         console.log('User:', response.user);
-        this.router.navigate(['/home']);
+        console.log('Role:', response.user.role);
+
+        if (response.user.role?.toLowerCase() === 'admin') {
+          this.router.navigate(['/admin/users']);
+        } else {
+          this.router.navigate(['/home']);
+        }
       },
       error: (error) => {
         console.error('LOGIN ERROR:', error);
