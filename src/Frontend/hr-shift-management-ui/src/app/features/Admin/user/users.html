@@ -1,0 +1,133 @@
+
+<div class="users-page">
+  <div class="page-header">
+  <div>
+    <h1>Quản lý người dùng</h1>
+    <p>Quản lý tài khoản và phân quyền truy cập hệ thống.</p>
+  </div>
+
+  <div class="header-actions">
+    <button
+      class="refresh-button"
+      (click)="loadUsers()">
+      Làm mới
+    </button>
+
+    <button
+      class="logout-button"
+      (click)="logout()">
+      <span>↪</span>
+      Đăng xuất
+    </button>
+  </div>
+</div>
+
+  <div class="summary-card">
+    <div>
+      <span>Tổng số người dùng</span>
+      <strong>{{ users.length }}</strong>
+    </div>
+  </div>
+
+  
+<div class="users-card">
+  <h2>Danh sách người dùng</h2>
+
+  <!-- Thông báo cập nhật thành công -->
+  <div *ngIf="successMessage" class="success-message">
+    {{ successMessage }}
+  </div>
+
+  <!-- Thông báo lỗi -->
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="isLoading" class="loading">
+    Đang tải danh sách người dùng...
+  </div>
+
+  <div class="table-wrapper" *ngIf="!isLoading">
+    <table>
+      <thead>
+        <tr>
+          <th>Họ và tên</th>
+          <th>Email</th>
+          <th>Số điện thoại</th>
+          <th>Vai trò hiện tại</th>
+          <th>Thay đổi vai trò</th>
+          <th>Trạng thái</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.fullName }}</td>
+
+          <td>{{ user.email }}</td>
+
+          <td>
+            {{ user.phoneNumber || 'Chưa cập nhật' }}
+          </td>
+
+          <td>
+            <span
+              class="role-badge"
+              [ngClass]="user.role.toLowerCase()">
+              {{ user.role }}
+            </span>
+          </td>
+
+          <!-- Chọn vai trò mới -->
+          <td>
+            <select
+              [(ngModel)]="pendingRoles[user.id]"
+              [disabled]="
+                user.id === currentUserId ||
+                savingUserId === user.id
+              ">
+
+              <option
+                *ngFor="let role of roles"
+                [value]="role.value">
+                {{ role.label }}
+              </option>
+
+            </select>
+          </td>
+
+          <td>{{ user.status }}</td>
+
+          <!-- Nút lưu -->
+          <td>
+            <button
+              class="save-button"
+              (click)="saveUserRole(user)"
+              [disabled]="
+                user.id === currentUserId ||
+                pendingRoles[user.id] === user.role ||
+                savingUserId === user.id
+              ">
+
+              {{
+                savingUserId === user.id
+                  ? 'Đang lưu...'
+                  : 'Lưu'
+              }}
+
+            </button>
+          </td>
+        </tr>
+
+        <tr *ngIf="users.length === 0">
+          <td colspan="7" class="empty-message">
+            Chưa có người dùng nào.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div>
