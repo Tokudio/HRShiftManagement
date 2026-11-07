@@ -1,4 +1,3 @@
-
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -37,14 +36,19 @@ export class Login {
       password: this.password,
     }).subscribe({
       next: (response) => {
-        console.log('LOGIN NEXT: API trả về thành công');
-
         this.isLoading = false;
-        console.log('isLoading =', this.isLoading);
 
-        console.log('User:', response.user);
-        this.router.navigate(['/home']);
+        // Lay vai tro nguoi dung sau khi dang nhap
+        const role = response.user.role?.trim().toLowerCase();
+
+        // Dieu huong dua theo vai tro
+        if (role === 'manager' || role === 'admin') {
+          this.router.navigate(['/shifts']);
+        } else {
+          this.router.navigate(['/home']);
+        }
       },
+
       error: (error) => {
         console.error('LOGIN ERROR:', error);
 
@@ -52,9 +56,6 @@ export class Login {
         this.errorMessage =
           error.error?.message ||
           'Đăng nhập thất bại. Vui lòng kiểm tra email và mật khẩu.';
-      },
-      complete: () => {
-        console.log('LOGIN COMPLETE');
       },
     });
   }

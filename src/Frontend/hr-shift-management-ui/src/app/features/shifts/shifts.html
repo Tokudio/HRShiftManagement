@@ -1,0 +1,164 @@
+<div class="page">
+
+  <header class="header">
+    <div>
+      <h2>HRShiftManagement</h2>
+      <p>Hệ thống quản lý nhân sự và ca làm việc</p>
+    </div>
+    <button class="logout" (click)="logout()">
+      Đăng xuất
+    </button>
+  </header>
+
+  <main class="container">
+
+    <div class="title-row">
+      <div>
+        <h1>Quản lý ca làm việc</h1>
+        <p>Thiết lập các khung thời gian làm việc chuẩn</p>
+      </div>
+
+      <button class="btn-primary" (click)="openCreate()">
+        + Thêm ca làm việc
+      </button>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <span>Tổng số ca</span>
+        <strong>{{ shifts.length }}</strong>
+      </div>
+    </div>
+
+    <p class="success" *ngIf="successMessage">
+      {{ successMessage }}
+    </p>
+
+    <p class="error" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </p>
+
+    <section class="card">
+      <div class="card-header">
+        <h2>Danh sách ca làm việc</h2>
+
+        <input
+          type="search"
+          placeholder="Tìm kiếm ca..."
+          [(ngModel)]="searchText"
+        />
+      </div>
+
+      <p *ngIf="loading">Đang tải dữ liệu...</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Tên ca</th>
+              <th>Giờ bắt đầu</th>
+              <th>Giờ kết thúc</th>
+              <th>NV tối thiểu</th>
+              <th>NV tối đa</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let shift of filteredShifts">
+              <td>{{ shift.name }}</td>
+              <td>{{ shift.startTime.slice(0,5) }}</td>
+              <td>{{ shift.endTime.slice(0,5) }}</td>
+              <td>{{ shift.minEmployees }}</td>
+              <td>{{ shift.maxEmployees }}</td>
+
+              <td>
+                <button class="btn-edit" (click)="openEdit(shift)">
+                  Sửa
+                </button>
+
+                <button
+                  class="btn-delete"
+                  [disabled]="!shift.canDelete"
+                  [title]="shift.canDelete
+                    ? 'Xóa ca'
+                    : 'Ca đã có lịch phân công'"
+                  (click)="deleteShift(shift)">
+                  Xóa
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p *ngIf="!loading && filteredShifts.length === 0">
+        Không có ca làm việc nào.
+      </p>
+    </section>
+
+    <section class="card form-card" *ngIf="showForm">
+      <h2>
+        {{ editingId ? 'Chỉnh sửa ca làm việc' : 'Thêm ca làm việc' }}
+      </h2>
+
+      <form (ngSubmit)="save()">
+
+        <label>Tên ca</label>
+        <input
+          name="name"
+          type="text"
+          [(ngModel)]="form.name"
+          maxlength="100"
+          required
+        />
+
+        <label>Giờ bắt đầu</label>
+        <input
+          name="startTime"
+          type="time"
+          [(ngModel)]="form.startTime"
+          required
+        />
+
+        <label>Giờ kết thúc</label>
+        <input
+          name="endTime"
+          type="time"
+          [(ngModel)]="form.endTime"
+          required
+        />
+
+        <label>Số nhân viên tối thiểu</label>
+        <input
+          name="minEmployees"
+          type="number"
+          min="1"
+          [(ngModel)]="form.minEmployees"
+          required
+        />
+
+        <label>Số nhân viên tối đa</label>
+        <input
+          name="maxEmployees"
+          type="number"
+          min="1"
+          [(ngModel)]="form.maxEmployees"
+          required
+        />
+
+        <div class="form-actions">
+          <button type="button" (click)="closeForm()">
+            Hủy
+          </button>
+
+          <button type="submit" class="btn-primary"
+                  [disabled]="saving">
+            {{ saving ? 'Đang lưu...' : 'Lưu ca làm việc' }}
+          </button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+</div>

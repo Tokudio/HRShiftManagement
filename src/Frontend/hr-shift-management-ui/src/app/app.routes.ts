@@ -17,6 +17,15 @@ export const routes: Routes = [
             ),
     },
     {
+        // Trang quan ly ca lam viec - US 2.1
+        path: 'shifts',
+        canActivate: [authGuard],
+        loadComponent: () =>
+            import('./features/shifts/shifts').then(
+                (m) => m.Shifts
+            ),
+    },
+    {
         path: 'home',
         canActivate: [authGuard],
         loadComponent: () =>
