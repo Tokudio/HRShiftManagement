@@ -30,6 +30,7 @@ public static class InfrastructureServiceRegistration
         // Register Application Services
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IAdminBootstrapService, AdminBootstrapService>();
+        services.AddScoped<IUserManagementService, UserManagementService>();
 
         return services;
     }
