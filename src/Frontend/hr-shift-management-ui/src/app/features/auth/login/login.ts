@@ -43,12 +43,21 @@ export class Login {
         console.log('User:', response.user);
         console.log('Role:', response.user.role);
 
-        if (response.user.role?.toLowerCase() === 'admin') {
-          this.router.navigate(['/admin/users']);
-        } else {
-          this.router.navigate(['/home']);
-        }
-      },
+        
+    const role = response.user.role?.trim().toLowerCase();
+
+      if (role === 'admin') {
+        // Admin vao trang quan ly nguoi dung
+        this.router.navigate(['/admin/users']);
+
+      } else if (role === 'manager') {
+        // Manager vao trang quan ly ca lam viec
+        this.router.navigate(['/shifts']);
+      } else {
+        // Employee vao trang chu
+        this.router.navigate(['/home']);
+      }
+    },
       error: (error) => {
         console.error('LOGIN ERROR:', error);
 

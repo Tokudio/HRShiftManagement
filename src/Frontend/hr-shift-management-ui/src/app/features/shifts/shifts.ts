@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  ChangeDetectorRef
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -23,6 +28,7 @@ export class Shifts implements OnInit {
   private shiftService = inject(ShiftService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   shifts: Shift[] = [];
   searchText = '';
@@ -60,23 +66,34 @@ export class Shifts implements OnInit {
     );
   }
 
-  loadShifts(): void {
-    this.loading = true;
-    this.errorMessage = '';
+  
 
-    this.shiftService.getAll().subscribe({
-      next: (data) => {
-        this.shifts = data;
-        this.loading = false;
-      },
-      error: (error) => {
-        this.loading = false;
-        this.errorMessage = this.getError(
-          error, 'Không tải được danh sách ca.'
-        );
-      }
-    });
-  }
+loadShifts(): void {
+  this.loading = true;
+  this.errorMessage = '';
+
+  this.shiftService.getAll().subscribe({
+    next: (data) => {
+      this.shifts = data;
+      this.loading = false;
+
+      // Thong bao Angular cap nhat giao dien
+      this.cdr.markForCheck();
+    },
+
+    error: (error) => {
+      this.loading = false;
+
+      this.errorMessage = this.getError(
+        error,
+        'Không tải được danh sách ca.'
+      );
+
+      // Cap nhat giao dien khi API bao loi
+      this.cdr.markForCheck();
+    }
+  });
+}
 
   openCreate(): void {
     this.editingId = null;
