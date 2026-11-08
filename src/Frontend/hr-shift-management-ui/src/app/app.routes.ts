@@ -21,6 +21,15 @@ export const routes: Routes = [
       ),
   },
   {
+    // Trang quản lý ca làm việc - US 2.1
+    path: 'shifts',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/shifts/shifts').then(
+        (m) => m.Shifts
+      ),
+  },
+  {
     path: 'home',
     canActivate: [authGuard],
     loadComponent: () =>
@@ -29,6 +38,7 @@ export const routes: Routes = [
       ),
   },
   {
+    // Trang quản lý người dùng - Admin
     path: 'admin/users',
     canActivate: [adminGuard],
     loadComponent: () =>
