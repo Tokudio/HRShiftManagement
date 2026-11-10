@@ -13,4 +13,16 @@ public interface IUserManagementService
         string role,
         Guid performedByUserId,
         CancellationToken cancellationToken = default);
+    Task<Result<UserListItemDto>> CreateUserAsync(
+    CreateUserRequest request,
+    CancellationToken cancellationToken = default);
+    Task<Result<UserListItemDto>> UpdateUserAsync(
+    Guid userId,
+    UpdateUserRequest request,
+    CancellationToken cancellationToken = default);
+    Task<Result<bool>> UpdateUserStatusAsync(
+    Guid userId,
+    string status,
+    Guid performedByUserId,
+    CancellationToken cancellationToken = default);
 }
