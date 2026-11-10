@@ -201,6 +201,11 @@ loadShifts(): void {
     });
   }
 
+    // Chuyen sang trang lich phan ca - US 2.2
+  goSchedule(): void {
+    this.router.navigate(['/schedule']);
+  }
+  
   logout(): void {
     this.authService.logout().subscribe({
       next: () => this.router.navigate(['/login']),
