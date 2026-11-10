@@ -201,3 +201,36 @@ th {
     width: 100%;
   }
 }
+
+/* Nhom nut quan ly ca va lich phan ca */
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Nut chuyen sang lich phan ca */
+.btn-schedule {
+  background: #16a085;
+  color: white;
+  border: none;
+  padding: 11px 18px;
+  border-radius: 7px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-schedule:hover {
+  background: #12806b;
+}
+
+@media (max-width: 650px) {
+  .action-buttons {
+    width: 100%;
+  }
+
+  .action-buttons button {
+    flex: 1;
+  }
+}

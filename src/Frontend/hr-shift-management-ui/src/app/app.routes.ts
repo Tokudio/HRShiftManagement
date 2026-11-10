@@ -1,4 +1,3 @@
-
 import { Routes } from '@angular/router';
 import {
   authGuard,
@@ -21,12 +20,21 @@ export const routes: Routes = [
       ),
   },
   {
-    // Trang quản lý ca làm việc - US 2.1
+    // US 2.1 - Quan ly ca lam viec
     path: 'shifts',
     canActivate: [authGuard],
     loadComponent: () =>
       import('./features/shifts/shifts').then(
         (m) => m.Shifts
+      ),
+  },
+  {
+    // US 2.2 - Lich phan ca nhan vien
+    path: 'schedule',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/schedule/schedule').then(
+        (m) => m.Schedule
       ),
   },
   {
@@ -38,7 +46,7 @@ export const routes: Routes = [
       ),
   },
   {
-    // Trang quản lý người dùng - Admin
+    // Trang quan ly nguoi dung - Admin
     path: 'admin/users',
     canActivate: [adminGuard],
     loadComponent: () =>
