@@ -1,0 +1,246 @@
+<div class="schedule-page">
+
+  <header class="topbar">
+    <div>
+      <h2>HRShiftManagement</h2>
+      <span>Hệ thống quản lý nhân sự và ca làm việc</span>
+    </div>
+
+    <button (click)="backToShifts()">
+      Quản lý ca làm việc
+    </button>
+  </header>
+
+  <main class="container">
+
+    <div class="heading">
+      <div>
+        <h1>Lịch phân ca nhân viên</h1>
+        <p>Phân công và theo dõi lịch làm việc</p>
+      </div>
+    </div>
+
+    <section class="toolbar">
+
+      <div class="view-switch">
+        <button
+          [class.active]="viewMode === 'day'"
+          (click)="setView('day')">
+          Ngày
+        </button>
+
+        <button
+          [class.active]="viewMode === 'week'"
+          (click)="setView('week')">
+          Tuần
+        </button>
+
+        <button
+          [class.active]="viewMode === 'month'"
+          (click)="setView('month')">
+          Tháng
+        </button>
+      </div>
+
+      <div class="date-controls">
+        <button (click)="navigateDate(-1)">
+          &#10094;
+        </button>
+
+        <input
+          type="date"
+          [ngModel]="selectedDate"
+          (ngModelChange)="changeDate($event)"
+        />
+
+        <button (click)="navigateDate(1)">
+          &#10095;
+        </button>
+
+        <button (click)="goToday()">Hôm nay</button>
+      </div>
+
+    </section>
+
+    <div class="notice success" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+
+    <div
+      class="notice error"
+      *ngIf="errorMessage && !showAssignForm">
+      {{ errorMessage }}
+    </div>
+
+    <p *ngIf="loading">Đang tải lịch làm việc...</p>
+
+    <section
+      class="calendar"
+      [class.day-view]="viewMode === 'day'"
+      [class.week-view]="viewMode === 'week'"
+      [class.month-view]="viewMode === 'month'">
+
+      <div class="day-card" *ngFor="let day of days"
+           [class.other-month]="!day.currentMonth">
+
+        <div class="day-header">
+          <span>{{ day.label }}</span>
+          <strong>{{ day.dayNumber }}</strong>
+        </div>
+
+        <div
+          class="empty-day"
+          *ngIf="!loading && cellsForDay(day.date).length === 0">
+          Chưa có ca
+        </div>
+
+        <article
+          class="shift-card"
+          *ngFor="let cell of cellsForDay(day.date)">
+
+          <h3>{{ cell.shiftName }}</h3>
+
+          <p class="time">
+            {{ formatTime(cell.startTime) }}
+            -
+            {{ formatTime(cell.endTime) }}
+          </p>
+
+          <div class="count">
+            <strong>
+              {{ cell.assignedCount }}/{{ cell.maxEmployees }}
+            </strong>
+            <span>nhân viên</span>
+          </div>
+
+          <p class="required">
+            Tối thiểu: {{ cell.minEmployees }}
+          </p>
+
+          <div class="warning"
+               *ngIf="missingEmployees(cell) > 0">
+            Còn thiếu {{ missingEmployees(cell) }} người
+          </div>
+
+          <div class="enough"
+               *ngIf="missingEmployees(cell) === 0">
+            Đã đủ mức tối thiểu
+          </div>
+
+          
+          <ul class="employee-list">
+            <li *ngFor="let employee of cell.employees">
+              <span class="employee-name">
+                {{ employee.fullName }}
+              </span>
+              <button
+                type="button"
+                class="remove-employee"
+                title="Xóa nhân viên khỏi ca"
+                (click)="removeEmployee(cell, employee)">
+                Xóa
+              </button>
+            </li>
+          </ul>
+
+
+          <button
+            class="assign-button"
+            [disabled]="cell.assignedCount >= cell.maxEmployees"
+            (click)="openAssign(cell)">
+            + Phân nhân viên
+          </button>
+
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Form phan nhan vien -->
+  <div
+    class="overlay"
+    *ngIf="showAssignForm"
+    (click)="closeAssign()">
+
+    <div
+      class="dialog"
+      *ngIf="selectedCell as cell"
+      (click)="$event.stopPropagation()">
+
+      <div class="dialog-header">
+        <h2>Phân nhân viên vào ca</h2>
+        <button (click)="closeAssign()">✕</button>
+      </div>
+
+      <p><strong>Ca:</strong> {{ cell.shiftName }}</p>
+      <p><strong>Ngày:</strong> {{ cell.workDate }}</p>
+
+      <p>
+        <strong>Thời gian:</strong>
+        {{ formatTime(cell.startTime) }}
+        -
+        {{ formatTime(cell.endTime) }}
+      </p>
+
+      <p>
+        <strong>Hiện tại:</strong>
+        {{ cell.assignedCount }}/{{ cell.maxEmployees }}
+        nhân viên
+      </p>
+
+      <hr />
+
+      <h3>Chọn nhân viên</h3>
+
+      <p *ngIf="availableEmployees.length === 0">
+        Không còn nhân viên để chọn.
+      </p>
+
+      <div class="employee-options">
+        <label
+          class="employee-option"
+          *ngFor="let employee of availableEmployees">
+
+          <input
+            type="checkbox"
+            [checked]="isSelected(employee.id)"
+            (change)="toggleEmployee(
+              employee.id,
+              $any($event.target).checked
+            )"
+          />
+
+          <span>
+            <strong>{{ employee.fullName }}</strong>
+            <small>{{ employee.email }}</small>
+          </span>
+
+        </label>
+      </div>
+
+      <p class="selected-count">
+        Đã chọn: {{ selectedEmployeeIds.length }} nhân viên
+      </p>
+
+      <div class="notice error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <div class="dialog-actions">
+        <button (click)="closeAssign()">
+          Hủy
+        </button>
+
+        <button
+          class="primary-button"
+          [disabled]="saving || selectedEmployeeIds.length === 0"
+          (click)="saveAssignment()">
+          {{ saving ? 'Đang lưu...' : 'Lưu phân ca' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
