@@ -43,3 +43,36 @@ export const adminGuard: CanActivateFn = () => {
     return router.createUrlTree(['/login']);
   }
 };
+
+// US 2.3 - Chi nhan vien moi vao trang lich ca nhan
+export const employeeGuard: CanActivateFn = () => {
+  const router = inject(Router);
+
+  const token = localStorage.getItem('access_token');
+  const userJson = localStorage.getItem('user');
+
+  if (!token || !userJson) {
+    return router.createUrlTree(['/login']);
+  }
+
+  try {
+    const user = JSON.parse(userJson) as StoredUser;
+    const role = user.role?.trim().toLowerCase();
+
+    if (role === 'employee') {
+      return true;
+    }
+
+    if (role === 'manager') {
+      return router.createUrlTree(['/shifts']);
+    }
+
+    if (role === 'admin') {
+      return router.createUrlTree(['/admin/users']);
+    }
+
+    return router.createUrlTree(['/home']);
+  } catch {
+    return router.createUrlTree(['/login']);
+  }
+};

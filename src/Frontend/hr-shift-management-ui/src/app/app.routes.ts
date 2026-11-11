@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
 import {
   authGuard,
-  adminGuard
+  adminGuard,
+  employeeGuard
 } from './core/guards/auth-guard';
 
 export const routes: Routes = [
@@ -37,6 +38,18 @@ export const routes: Routes = [
         (m) => m.Schedule
       ),
   },
+
+  {
+    // US 2.3 - Lich lam viec cua nhan vien
+    path: 'my-schedule',
+    canActivate: [employeeGuard],
+    loadComponent: () =>
+      import('./features/my-schedule/my-schedule').then(
+        (m) => m.MySchedule
+      ),
+  },
+
+
   {
     path: 'home',
     canActivate: [authGuard],

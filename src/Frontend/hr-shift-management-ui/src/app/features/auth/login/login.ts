@@ -49,12 +49,15 @@ export class Login {
       if (role === 'admin') {
         // Admin vao trang quan ly nguoi dung
         this.router.navigate(['/admin/users']);
-
       } else if (role === 'manager') {
         // Manager vao trang quan ly ca lam viec
         this.router.navigate(['/shifts']);
+
+      } else if (role === 'employee') {
+        // US 2.3 - Employee vao lich lam viec ca nhan
+        this.router.navigate(['/my-schedule']);
+
       } else {
-        // Employee vao trang chu
         this.router.navigate(['/home']);
       }
     },

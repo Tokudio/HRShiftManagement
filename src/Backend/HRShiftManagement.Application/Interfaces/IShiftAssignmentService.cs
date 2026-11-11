@@ -20,6 +20,13 @@ public interface IShiftAssignmentService
         DateOnly to,
         CancellationToken ct = default);
 
+    // Lay lich lam viec cua mot nhan vien
+    Task<List<EmployeeScheduleResponse>> GetEmployeeScheduleAsync(
+        Guid employeeId,
+        DateOnly from,
+        DateOnly to,
+        CancellationToken ct = default);
+
     // Phan mot hoac nhieu nhan vien vao ca
     Task AssignAsync(
         AssignEmployeesRequest request,
