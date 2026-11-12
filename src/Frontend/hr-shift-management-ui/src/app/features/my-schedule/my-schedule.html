@@ -1,0 +1,135 @@
+<div class="page">
+
+  <header class="header">
+    <div>
+      <h2>HRShiftManagement</h2>
+      <p>Hệ thống quản lý nhân sự và ca làm việc</p>
+    </div>
+
+    <button class="logout" (click)="logout()">
+      Đăng xuất
+    </button>
+  </header>
+
+  <main class="container">
+
+    <div class="title-row">
+      <div>
+        <h1>Lịch làm việc của tôi</h1>
+        <p>Xem những ca làm việc được phân công</p>
+      </div>
+
+      <button class="btn-primary" (click)="loadSchedule()">
+        Làm mới lịch
+      </button>
+    </div>
+
+    <section class="toolbar">
+
+      <div class="view-buttons">
+        <button
+          [class.active]="viewMode === 'day'"
+          (click)="setView('day')">
+          Theo ngày
+        </button>
+
+        <button
+          [class.active]="viewMode === 'week'"
+          (click)="setView('week')">
+          Theo tuần
+        </button>
+      </div>
+
+      <div class="date-buttons">
+        <button (click)="navigateDate(-1)">
+          &#10094;
+        </button>
+
+        <input
+          type="date"
+          [ngModel]="selectedDate"
+          (ngModelChange)="changeDate($event)"
+        />
+
+        <button (click)="navigateDate(1)">
+          &#10095;
+        </button>
+
+        <button (click)="goToday()">
+          Hôm nay
+        </button>
+      </div>
+
+    </section>
+
+    <section class="card">
+
+      <div class="card-title">
+        <div>
+          <h2>{{ periodLabel }}</h2>
+          <p *ngIf="lastUpdated">
+            Cập nhật lúc {{ lastUpdated }}
+          </p>
+        </div>
+
+        <span class="count">
+          {{ shifts.length }} ca làm việc
+        </span>
+      </div>
+
+      <p *ngIf="loading" class="loading">
+        Đang tải lịch làm việc...
+      </p>
+
+      <p *ngIf="errorMessage" class="error">
+        {{ errorMessage }}
+      </p>
+
+      <div
+        class="table-wrap"
+        *ngIf="!loading && !errorMessage && shifts.length > 0">
+
+        <table>
+          <thead>
+            <tr>
+              <th>Ngày làm việc</th>
+              <th>Tên ca</th>
+              <th>Giờ bắt đầu</th>
+              <th>Giờ kết thúc</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let shift of shifts">
+              <td>{{ formatDate(shift.workDate) }}</td>
+
+              <td>
+                <span class="shift-name">
+                  {{ shift.shiftName }}
+                </span>
+              </td>
+
+              <td>{{ formatTime(shift.startTime) }}</td>
+
+              <td>{{ formatTime(shift.endTime) }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+      <div
+        class="empty"
+        *ngIf="!loading && !errorMessage && shifts.length === 0">
+
+        <h3>Chưa có lịch làm việc</h3>
+        <p>
+          Bạn chưa được phân ca trong khoảng thời gian này.
+        </p>
+
+      </div>
+
+    </section>
+
+  </main>
+</div>
