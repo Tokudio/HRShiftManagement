@@ -234,3 +234,120 @@ th {
     flex: 1;
   }
 }
+
+.overnight-label {
+  display: inline-block;
+  margin-left: 5px;
+  color: #b45309;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Popup thong bao */
+.toast-popup {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 10000;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  width: min(410px, calc(100vw - 32px));
+  padding: 16px;
+
+  background: white;
+  border-radius: 12px;
+  border-left: 5px solid transparent;
+
+  box-shadow: 0 10px 32px rgba(15, 23, 42, 0.2);
+  animation: toast-in 0.2s ease-out;
+}
+
+/* Trang thai thanh cong */
+.toast-success {
+  border-left-color: #16a34a;
+}
+
+/* Trang thai loi */
+.toast-error {
+  border-left-color: #dc2626;
+}
+
+/* Bieu tuong */
+.toast-icon {
+  display: grid;
+  place-items: center;
+
+  flex: 0 0 28px;
+  height: 28px;
+  border-radius: 50%;
+
+  color: white;
+  font-weight: bold;
+}
+
+.toast-success .toast-icon {
+  background: #16a34a;
+}
+
+.toast-error .toast-icon {
+  background: #dc2626;
+}
+
+/* Noi dung Popup */
+.toast-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.toast-body strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.toast-body p {
+  margin: 0;
+  color: #475569;
+  overflow-wrap: anywhere;
+}
+
+/* Nut dong Popup */
+.toast-close {
+  flex: 0 0 auto;
+  padding: 0 3px;
+
+  border: none;
+  background: transparent;
+
+  color: #64748b;
+  font-size: 23px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.toast-close:hover {
+  color: #0f172a;
+}
+
+/* Hieu ung xuat hien */
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Giao dien dien thoai */
+@media (max-width: 650px) {
+  .toast-popup {
+    top: 16px;
+    right: 16px;
+  }
+}

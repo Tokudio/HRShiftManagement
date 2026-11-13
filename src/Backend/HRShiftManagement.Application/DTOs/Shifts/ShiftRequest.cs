@@ -26,5 +26,9 @@ public class ShiftRequest
 
     [Range(1, 10000)]
     public int MaxEmployees { get; set; }
+
+    // Xac nhan ca lam viec qua dem
+    public bool ConfirmOvernight { get; set; } = false;
+
 }
 
