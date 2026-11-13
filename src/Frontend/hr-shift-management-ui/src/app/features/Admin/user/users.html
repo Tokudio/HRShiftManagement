@@ -1,0 +1,303 @@
+
+<div class="users-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1>Quản lý người dùng</h1>
+      <p>Quản lý tài khoản và phân quyền người dùng trong hệ thống.</p>
+    </div>
+
+    <div class="header-actions">
+      <button
+        class="refresh-button"
+        type="button"
+        (click)="loadUsers()"
+        [disabled]="isLoading">
+        Làm mới
+      </button>
+
+      <button
+        class="logout-button"
+        type="button"
+        (click)="logout()">
+        Đăng xuất
+      </button>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary-card">
+    <div>
+      <span class="summary-label">Tổng số tài khoản</span>
+      <h2>{{ users.length }}</h2>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="success-message" *ngIf="successMessage">
+    {{ successMessage }}
+  </div>
+
+  <!-- Create button -->
+  <div class="toolbar">
+    <button
+      class="create-button"
+      type="button"
+      (click)="openCreateForm()"
+      [disabled]="showForm">
+      + Thêm tài khoản
+    </button>
+  </div>
+
+  <!-- Create / Edit form -->
+  <section class="user-form-card" *ngIf="showForm">
+    <div class="form-header">
+      <h2>
+        {{ isEditMode ? 'Chỉnh sửa tài khoản' : 'Tạo tài khoản mới' }}
+      </h2>
+
+      <button
+        class="close-button"
+        type="button"
+        (click)="cancelForm()"
+        [disabled]="isSubmitting">
+        ✕
+      </button>
+    </div>
+
+    <form
+      #userForm="ngForm"
+      (ngSubmit)="isEditMode ? updateUser() : createUser()">
+
+      <div class="form-grid">
+
+        <!-- Full name -->
+        <div class="form-group">
+          <label for="fullName">Họ và tên *</label>
+          <input
+            id="fullName"
+            type="text"
+            name="fullName"
+            [(ngModel)]="formData.fullName"
+            required
+            maxlength="200"
+            placeholder="Nhập họ và tên">
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            [(ngModel)]="formData.email"
+            required
+            email
+            placeholder="example@email.com">
+        </div>
+
+        <!-- Phone -->
+        <div class="form-group">
+          <label for="phoneNumber">Số điện thoại</label>
+          <input
+            id="phoneNumber"
+            type="text"
+            name="phoneNumber"
+            [(ngModel)]="formData.phoneNumber"
+            maxlength="20"
+            placeholder="Nhập số điện thoại">
+        </div>
+
+        <!-- Password: only create -->
+        <div class="form-group" *ngIf="!isEditMode">
+          <label for="password">Mật khẩu *</label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            [(ngModel)]="formData.password"
+            required
+            minlength="8"
+            placeholder="Nhập mật khẩu">
+          <small>
+            Mật khẩu phải có chữ hoa, chữ thường, số và ký tự đặc biệt.
+          </small>
+        </div>
+
+        <!-- Role: only create -->
+        <div class="form-group" *ngIf="!isEditMode">
+          <label for="role">Vai trò *</label>
+          <select
+            id="role"
+            name="role"
+            [(ngModel)]="formData.role"
+            required>
+            <option
+              *ngFor="let role of roles"
+              [value]="role.value">
+              {{ role.label }}
+            </option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+        <button
+          class="cancel-button"
+          type="button"
+          (click)="cancelForm()"
+          [disabled]="isSubmitting">
+          Hủy
+        </button>
+
+        <button
+          class="submit-button"
+          type="submit"
+          [disabled]="isSubmitting || userForm.invalid">
+
+          {{
+            isSubmitting
+              ? 'Đang xử lý...'
+              : (isEditMode ? 'Lưu thay đổi' : 'Tạo tài khoản')
+          }}
+        </button>
+      </div>
+
+    </form>
+  </section>
+
+  <!-- Loading -->
+  <div class="loading-state" *ngIf="isLoading">
+    Đang tải danh sách người dùng...
+  </div>
+
+  <!-- User table -->
+  <section class="table-card" *ngIf="!isLoading">
+
+    <div class="table-header">
+      <h2>Danh sách tài khoản</h2>
+      <span>{{ users.length }} tài khoản</span>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Họ và tên</th>
+            <th>Email</th>
+            <th>Số điện thoại</th>
+            <th>Vai trò hiện tại</th>
+            <th>Thay đổi vai trò</th>
+            <th>Trạng thái</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let user of users">
+
+            <td>{{ user.fullName }}</td>
+
+            <td>{{ user.email }}</td>
+
+            <td>{{ user.phoneNumber || '—' }}</td>
+
+            <!-- Current role -->
+            <td>
+              <span class="role-badge" [ngClass]="user.role.toLowerCase()">
+                {{ user.role }}
+              </span>
+            </td>
+
+            <!-- Change role -->
+            <td>
+              <select
+                [(ngModel)]="pendingRoles[user.id]"
+                [disabled]="user.id === currentUserId || savingUserId === user.id">
+
+                <option
+                  *ngFor="let role of roles"
+                  [value]="role.value">
+                  {{ role.label }}
+                </option>
+              </select>
+            </td>
+
+            <!-- Status -->
+            <td>
+              <span
+                class="status-badge"
+                [ngClass]="user.status.toLowerCase()">
+                {{ getStatusLabel(user.status) }}
+              </span>
+            </td>
+
+            <!-- Actions -->
+            <td>
+              <div class="action-buttons">
+
+                <button
+                  class="save-button"
+                  type="button"
+                  (click)="saveUserRole(user)"
+                  [disabled]="
+                    user.id === currentUserId ||
+                    savingUserId === user.id ||
+                    pendingRoles[user.id] === user.role
+                  ">
+                  {{ savingUserId === user.id ? 'Đang lưu...' : 'Lưu vai trò' }}
+                </button>
+
+                <button
+                  class="edit-button"
+                  type="button"
+                  (click)="openEditForm(user)">
+                  Sửa
+                </button>
+
+                <button
+                  *ngIf="user.status === 'Active'"
+                  class="lock-button"
+                  type="button"
+                  (click)="toggleUserStatus(user)"
+                  [disabled]="
+                    user.id === currentUserId ||
+                    statusSavingUserId === user.id
+                  ">
+                  {{ statusSavingUserId === user.id ? 'Đang xử lý...' : 'Khóa' }}
+                </button>
+
+                <button
+                  *ngIf="user.status === 'Locked'"
+                  class="activate-button"
+                  type="button"
+                  (click)="toggleUserStatus(user)"
+                  [disabled]="statusSavingUserId === user.id">
+                  {{ statusSavingUserId === user.id ? 'Đang xử lý...' : 'Kích hoạt' }}
+                </button>
+
+              </div>
+            </td>
+
+          </tr>
+
+          <!-- Empty state -->
+          <tr *ngIf="users.length === 0">
+            <td colspan="7" class="empty-state">
+              Chưa có tài khoản nào trong hệ thống.
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>

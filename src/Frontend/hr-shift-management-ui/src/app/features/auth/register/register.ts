@@ -25,6 +25,20 @@ export class Register {
   errorMessage = '';
   successMessage = '';
 
+  // Chỉ cho phép nhập số điện thoại từ 0 đến 9
+  // Chỉ cho phép nhập các chữ số từ 0 đến 9
+  onPhoneNumberInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    // Loại bỏ chữ cái và ký tự đặc biệt
+    const numericValue = input.value.replace(/[^0-9]/g, '');
+
+    // Cập nhật trực tiếp nội dung ô input
+    input.value = numericValue;
+
+    // Cập nhật dữ liệu trong Angular
+    this.phoneNumber = numericValue;
+  }
   onRegister(): void {
     this.errorMessage = '';
     this.successMessage = '';

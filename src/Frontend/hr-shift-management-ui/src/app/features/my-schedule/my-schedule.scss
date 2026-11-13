@@ -1,0 +1,190 @@
+:host {
+  display: block;
+  font-family: Arial, sans-serif;
+  color: #1e293b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.page {
+  min-height: 100vh;
+  background: #f4f6fb;
+}
+
+.header {
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 20px 6%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h2 {
+    margin: 0 0 6px;
+    color: #3159db;
+  }
+
+  p {
+    margin: 0;
+    color: #64748b;
+  }
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 32px 20px;
+}
+
+.title-row,
+.toolbar,
+.card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.title-row {
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+  }
+
+  p {
+    color: #64748b;
+  }
+}
+
+button {
+  cursor: pointer;
+  border-radius: 7px;
+  padding: 10px 15px;
+  border: 1px solid #cbd5e1;
+  background: white;
+}
+
+.btn-primary {
+  background: #3159db;
+  color: white;
+  border: none;
+}
+
+.logout {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: none;
+}
+
+.toolbar,
+.card {
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+}
+
+.view-buttons,
+.date-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.view-buttons button.active {
+  background: #3159db;
+  color: white;
+  border-color: #3159db;
+}
+
+.date-buttons input {
+  padding: 9px;
+  border-radius: 7px;
+  border: 1px solid #cbd5e1;
+}
+
+.card-title {
+  margin-bottom: 20px;
+
+  h2 {
+    margin: 0 0 8px;
+  }
+
+  p {
+    margin: 0;
+    color: #64748b;
+    font-size: 12px;
+  }
+}
+
+.count {
+  padding: 8px 12px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  border-radius: 7px;
+  font-weight: bold;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+th {
+  background: #f8fafc;
+  color: #475569;
+}
+
+.shift-name {
+  font-weight: bold;
+  color: #3159db;
+}
+
+.empty {
+  text-align: center;
+  padding: 40px 10px;
+
+  p {
+    color: #64748b;
+  }
+}
+
+.loading {
+  color: #64748b;
+}
+
+.error {
+  background: #fee2e2;
+  color: #991b1b;
+  border-radius: 8px;
+  padding: 14px;
+}
+
+@media (max-width: 700px) {
+  .header,
+  .title-row,
+  .toolbar,
+  .card-title {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .date-buttons {
+    flex-wrap: wrap;
+  }
+}

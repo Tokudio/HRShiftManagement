@@ -1,0 +1,68 @@
+
+USE HRShiftManagementDb;
+GO
+
+CREATE TABLE [dbo].[Shifts] (
+    [Id] UNIQUEIDENTIFIER NOT NULL,
+    [Name] NVARCHAR(100) NOT NULL,
+    [StartTime] TIME(0) NOT NULL,
+    [EndTime] TIME(0) NOT NULL,
+    [MinEmployees] INT NOT NULL,
+    [MaxEmployees] INT NOT NULL,
+    [CreatedAt] DATETIME2 NOT NULL,
+    [UpdatedAt] DATETIME2 NULL,
+    [CreatedBy] NVARCHAR(MAX) NULL,
+    [UpdatedBy] NVARCHAR(MAX) NULL,
+
+    CONSTRAINT [PK_Shifts]
+        PRIMARY KEY ([Id]),
+
+    CONSTRAINT [CK_Shifts_Employees]
+        CHECK (
+            [MinEmployees] >= 1
+            AND [MaxEmployees] >= [MinEmployees]
+        ),
+
+    CONSTRAINT [CK_Shifts_Time]
+        CHECK ([StartTime] <> [EndTime])
+);
+GO
+
+CREATE UNIQUE INDEX [IX_Shifts_Name]
+ON [dbo].[Shifts] ([Name]);
+GO
+
+
+
+CREATE TABLE [dbo].[ShiftAssignments] (
+    [Id] UNIQUEIDENTIFIER NOT NULL,
+    [ShiftId] UNIQUEIDENTIFIER NOT NULL,
+    [EmployeeId] UNIQUEIDENTIFIER NOT NULL,
+    [WorkDate] DATE NOT NULL,
+    [CreatedAt] DATETIME2 NOT NULL,
+    [UpdatedAt] DATETIME2 NULL,
+    [CreatedBy] NVARCHAR(MAX) NULL,
+    [UpdatedBy] NVARCHAR(MAX) NULL,
+
+    CONSTRAINT [PK_ShiftAssignments]
+        PRIMARY KEY ([Id]),
+
+    CONSTRAINT [FK_ShiftAssignments_Shifts_ShiftId]
+        FOREIGN KEY ([ShiftId])
+        REFERENCES [dbo].[Shifts] ([Id])
+        ON DELETE NO ACTION,
+
+    CONSTRAINT [FK_ShiftAssignments_Users_EmployeeId]
+        FOREIGN KEY ([EmployeeId])
+        REFERENCES [dbo].[Users] ([Id])
+        ON DELETE NO ACTION
+);
+GO
+
+CREATE INDEX [IX_ShiftAssignments_EmployeeId]
+ON [dbo].[ShiftAssignments] ([EmployeeId]);
+GO
+
+CREATE INDEX [IX_ShiftAssignments_ShiftId_WorkDate]
+ON [dbo].[ShiftAssignments] ([ShiftId], [WorkDate]);
+GO

@@ -13,6 +13,12 @@ public class ApplicationDbContext : DbContext
     public DbSet<User> Users => Set<User>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
+    public DbSet<Shift> Shifts => Set<Shift>();
+
+    public DbSet<ShiftAssignment> ShiftAssignments
+        => Set<ShiftAssignment>();
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

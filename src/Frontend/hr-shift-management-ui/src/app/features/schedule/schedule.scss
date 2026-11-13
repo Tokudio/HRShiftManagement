@@ -1,0 +1,366 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  color: #172b4d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.schedule-page {
+  background: #f4f7fd;
+  min-height: 100vh;
+}
+
+.topbar {
+  background: white;
+  padding: 20px 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e2e8f0;
+
+  h2 {
+    color: #3158d5;
+    margin: 0 0 6px;
+  }
+
+  span {
+    color: #64748b;
+    font-size: 13px;
+  }
+}
+
+.container {
+  max-width: 1440px;
+  padding: 30px 20px;
+  margin: auto;
+}
+
+.heading {
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0 0 8px;
+  }
+
+  p {
+    color: #64748b;
+  }
+}
+
+button {
+  border: 1px solid #cbd5e1;
+  background: white;
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.toolbar {
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 22px;
+}
+
+.view-switch,
+.date-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.view-switch .active {
+  background: #3158d5;
+  color: white;
+  border-color: #3158d5;
+}
+
+.date-controls input {
+  border: 1px solid #cbd5e1;
+  padding: 9px;
+  border-radius: 8px;
+}
+
+.calendar {
+  display: grid;
+  gap: 10px;
+  align-items: start;
+}
+
+.day-view {
+  grid-template-columns: 1fr;
+}
+
+.week-view,
+.month-view {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.day-card {
+  background: white;
+  min-height: 180px;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.other-month {
+  opacity: 0.55;
+}
+
+.day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  color: #475569;
+}
+
+.day-header strong {
+  font-size: 20px;
+  color: #1e3a8a;
+}
+
+.shift-card {
+  background: #edf3ff;
+  border-left: 4px solid #4269db;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+
+  h3 {
+    font-size: 13px;
+    margin: 0 0 7px;
+    overflow-wrap: anywhere;
+  }
+}
+
+.time,
+.required {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.count {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+
+  strong {
+    font-size: 20px;
+    color: #3158d5;
+  }
+
+  span {
+    font-size: 11px;
+  }
+}
+
+.warning,
+.enough {
+  font-size: 12px;
+  padding: 7px;
+  border-radius: 6px;
+  margin: 8px 0;
+}
+
+.warning {
+  color: #9a3412;
+  background: #ffedd5;
+}
+
+.enough {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.employee-list {
+  padding-left: 16px;
+  font-size: 12px;
+
+  li {
+    margin-bottom: 4px;
+    overflow-wrap: anywhere;
+  }
+}
+
+.assign-button {
+  background: #3158d5;
+  color: white;
+  width: 100%;
+  font-size: 12px;
+  border: none;
+}
+
+.empty-day {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.notice {
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+}
+
+.success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: #0008;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.dialog {
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: white;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 15px 45px #0003;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+
+  h2 {
+    font-size: 21px;
+  }
+}
+
+.employee-options {
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.employee-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-bottom: 1px solid #e2e8f0;
+
+  input {
+    width: 18px;
+    height: 18px;
+  }
+
+  small {
+    display: block;
+    color: #64748b;
+    margin-top: 4px;
+  }
+}
+
+.selected-count {
+  font-weight: 600;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.primary-button {
+  background: #3158d5;
+  color: white;
+  border: none;
+}
+
+@media (max-width: 1050px) {
+  .week-view,
+  .month-view {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .week-view,
+  .month-view {
+    grid-template-columns: 1fr;
+  }
+
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .date-controls {
+    flex-wrap: wrap;
+  }
+}
+
+/* Danh sach nhan vien trong ca */
+.employee-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+}
+
+.employee-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px;
+  margin-bottom: 6px;
+  background: white;
+  border-radius: 6px;
+}
+
+.employee-name {
+  font-size: 12px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+/* Nut xoa nhan vien */
+.remove-employee {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  padding: 5px 9px;
+  border-radius: 5px;
+  font-size: 12px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.remove-employee:hover {
+  background: #fecaca;
+}

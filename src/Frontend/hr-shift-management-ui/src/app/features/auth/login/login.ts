@@ -37,14 +37,30 @@ export class Login {
       password: this.password,
     }).subscribe({
       next: (response) => {
-        console.log('LOGIN NEXT: API trả về thành công');
-
         this.isLoading = false;
-        console.log('isLoading =', this.isLoading);
 
+        console.log('LOGIN NEXT: API trả về thành công');
         console.log('User:', response.user);
+        console.log('Role:', response.user.role);
+
+        
+    const role = response.user.role?.trim().toLowerCase();
+
+      if (role === 'admin') {
+        // Admin vao trang quan ly nguoi dung
+        this.router.navigate(['/admin/users']);
+      } else if (role === 'manager') {
+        // Manager vao trang quan ly ca lam viec
+        this.router.navigate(['/shifts']);
+
+      } else if (role === 'employee') {
+        // US 2.3 - Employee vao lich lam viec ca nhan
+        this.router.navigate(['/my-schedule']);
+
+      } else {
         this.router.navigate(['/home']);
-      },
+      }
+    },
       error: (error) => {
         console.error('LOGIN ERROR:', error);
 
