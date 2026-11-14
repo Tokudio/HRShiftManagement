@@ -99,13 +99,17 @@
           *ngFor="let cell of cellsForDay(day.date)">
 
           <h3>{{ cell.shiftName }}</h3>
-
           <p class="time">
             {{ formatTime(cell.startTime) }}
             -
             {{ formatTime(cell.endTime) }}
-          </p>
 
+            <span
+              class="overnight-label"
+              *ngIf="cell.endTime.slice(0, 5) < cell.startTime.slice(0, 5)">
+              (+1 ngày)
+            </span>
+          </p>
           <div class="count">
             <strong>
               {{ cell.assignedCount }}/{{ cell.maxEmployees }}
@@ -182,6 +186,12 @@
         -
         {{ formatTime(cell.endTime) }}
       </p>
+
+      <span
+        class="overnight-label"
+        *ngIf="cell.endTime.slice(0, 5) < cell.startTime.slice(0, 5)">
+        (+1 ngày)
+      </span>
 
       <p>
         <strong>Hiện tại:</strong>

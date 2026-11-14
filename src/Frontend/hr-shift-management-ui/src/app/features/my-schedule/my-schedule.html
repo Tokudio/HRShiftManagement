@@ -110,8 +110,17 @@
               </td>
 
               <td>{{ formatTime(shift.startTime) }}</td>
+              
+              <td>
+                {{ formatTime(shift.endTime) }}
 
-              <td>{{ formatTime(shift.endTime) }}</td>
+                <span
+                  class="overnight-label"
+                  *ngIf="shift.endTime.slice(0, 5) < shift.startTime.slice(0, 5)">
+                  (+1 ngày)
+                </span>
+              </td>
+
             </tr>
           </tbody>
         </table>
