@@ -19,6 +19,7 @@ export interface ShiftRequest {
   endTime: string;
   minEmployees: number;
   maxEmployees: number;
+  confirmOvernight?: boolean;
 }
 
 @Injectable({

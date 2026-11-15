@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using HRShiftManagement.Application.Common;
 using HRShiftManagement.Application.DTOs.Shifts;
 using HRShiftManagement.Application.Interfaces;
@@ -166,32 +165,73 @@ public class ShiftService : IShiftService
         return true;
     }
 
-    // Kiem tra thong tin ca
+
+    // Kiem tra thong tin ca lam viec
     private static string Validate(ShiftRequest request)
     {
         var name = (request.Name ?? "").Trim();
 
         if (name.Length < 2 || name.Length > 100)
+        {
             throw new ArgumentException(
                 "Ten ca phai co tu 2 den 100 ky tu.");
+        }
 
         if (request.StartTime == null ||
             request.EndTime == null)
+        {
             throw new ArgumentException(
                 "Vui long nhap thoi gian lam viec.");
+        }
 
-        if (request.StartTime == request.EndTime)
+        var start = request.StartTime.Value.ToTimeSpan();
+        var end = request.EndTime.Value.ToTimeSpan();
+
+        // Khong cho phep gio bat dau trung gio ket thuc
+        if (start == end)
+        {
             throw new ArgumentException(
-                "Gio bat dau phai khac gio ket thuc.");
+                "Gio bat dau khong duoc trung gio ket thuc.");
+        }
+
+        // Xac dinh ca qua dem
+        bool isOvernight = end < start;
+
+        if (isOvernight && !request.ConfirmOvernight)
+        {
+            throw new ArgumentException(
+                "Gio ket thuc nho hon gio bat dau. " +
+                "Vui long xac nhan ca lam viec qua dem.");
+        }
+
+        // Tinh thoi luong ca
+        TimeSpan duration = end - start;
+
+        // Neu ca qua dem thi cong them 1 ngay
+        if (isOvernight)
+        {
+            duration += TimeSpan.FromDays(1);
+        }
+
+        // Gioi han tu 30 phut den 12 gio
+        if (duration < TimeSpan.FromMinutes(30) ||
+            duration > TimeSpan.FromHours(12))
+        {
+            throw new ArgumentException(
+                "Thoi luong ca phai tu 30 phut den 12 gio.");
+        }
 
         if (request.MinEmployees < 1 ||
             request.MaxEmployees < request.MinEmployees ||
             request.MaxEmployees > 10000)
+        {
             throw new ArgumentException(
                 "So luong nhan vien khong hop le.");
+        }
 
         return name;
     }
+
 
     // Kiem tra ten ca trung
     private async Task CheckNameAsync(

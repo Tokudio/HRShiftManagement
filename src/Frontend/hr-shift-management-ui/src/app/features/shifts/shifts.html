@@ -1,5 +1,40 @@
-
 <div class="page">
+
+<!-- Toast Popup -->
+<div
+  *ngIf="toastMessage"
+  class="toast-popup"
+  [class.toast-success]="toastType === 'success'"
+  [class.toast-error]="toastType === 'error'"
+  [attr.role]="toastType === 'error' ? 'alert' : 'status'"
+  [attr.aria-live]="toastType === 'error' ? 'assertive' : 'polite'">
+
+  <!-- Bieu tuong trang thai -->
+  <span class="toast-icon" aria-hidden="true">
+    {{ toastType === 'success' ? '✓' : '!' }}
+  </span>
+
+  <!-- Noi dung thong bao -->
+  <div class="toast-body">
+    <strong>
+      {{ toastType === 'success'
+        ? 'Thành công!'
+        : 'Có lỗi xảy ra' }}
+    </strong>
+
+    <p>{{ toastMessage }}</p>
+  </div>
+
+  <!-- Nut dong -->
+  <button
+    type="button"
+    class="toast-close"
+    aria-label="Đóng thông báo"
+    (click)="closeToast()">
+    ×
+  </button>
+
+</div>
 
   <header class="header">
     <div>
@@ -43,14 +78,6 @@
       </div>
     </div>
 
-    <p class="success" *ngIf="successMessage">
-      {{ successMessage }}
-    </p>
-
-    <p class="error" *ngIf="errorMessage">
-      {{ errorMessage }}
-    </p>
-
     <section class="card">
       <div class="card-header">
         <h2>Danh sách ca làm việc</h2>
@@ -81,7 +108,14 @@
             <tr *ngFor="let shift of filteredShifts">
               <td>{{ shift.name }}</td>
               <td>{{ shift.startTime.slice(0,5) }}</td>
-              <td>{{ shift.endTime.slice(0,5) }}</td>
+              <td>
+                {{ shift.endTime.slice(0, 5) }}
+                <span
+                  class="overnight-label"
+                  *ngIf="isOvernight(shift.startTime, shift.endTime)">
+                  (+1 ngày)
+                </span>
+              </td>
               <td>{{ shift.minEmployees }}</td>
               <td>{{ shift.maxEmployees }}</td>
 
