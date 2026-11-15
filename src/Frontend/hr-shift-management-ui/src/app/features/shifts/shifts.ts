@@ -15,11 +15,12 @@ import {
 } from '../../core/services/shift.service';
 
 import { AuthService } from '../../core/services/auth.service';
+import { EmployeeList } from '../employees/employee-list';
 
 @Component({
   selector: 'app-shifts',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, EmployeeList],
   templateUrl: './shifts.html',
   styleUrl: './shifts.scss'
 })

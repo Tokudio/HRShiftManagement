@@ -32,6 +32,7 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<IShiftService, ShiftService>();
         services.AddScoped<IShiftAssignmentService, ShiftAssignmentService>();
         services.AddScoped<IAdminBootstrapService, AdminBootstrapService>();
+        services.AddScoped<IEmployeeService, EmployeeService>();
         services.AddScoped<IUserManagementService, UserManagementService>();
 
         return services;

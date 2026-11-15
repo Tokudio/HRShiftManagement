@@ -20,6 +20,18 @@ export const routes: Routes = [
         (m) => m.Register
       ),
   },
+
+  // Quan ly ho so nhan vien
+  // Dat truoc route shifts
+  {
+    path: 'shifts/employees',
+    canActivate: [adminGuard],
+    loadComponent: () =>
+      import('./features/employees/employee-list').then(
+        m => m.EmployeeList
+      )
+  },  
+
   {
     // US 2.1 - Quan ly ca lam viec
     path: 'shifts',
@@ -67,6 +79,14 @@ export const routes: Routes = [
         (m) => m.Users
       ),
   },
+
+// Chuyen duong dan cu sang duong dan moi
+  {
+    path: 'admin/employees',
+    redirectTo: 'shifts/employees',
+    pathMatch: 'full'
+  },
+
   {
     path: '',
     redirectTo: 'login',

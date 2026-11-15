@@ -66,3 +66,46 @@ GO
 CREATE INDEX [IX_ShiftAssignments_ShiftId_WorkDate]
 ON [dbo].[ShiftAssignments] ([ShiftId], [WorkDate]);
 GO
+
+
+
+
+USE [HRShiftManagementDb];
+GO
+
+-- Chỉ tạo bảng nếu chưa tồn tại
+IF OBJECT_ID('dbo.Employees', 'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.Employees
+    (
+        Id UNIQUEIDENTIFIER NOT NULL,
+
+        EmployeeCode NVARCHAR(30) NOT NULL,
+        FullName NVARCHAR(200) NOT NULL,
+        Email NVARCHAR(256) NULL,
+        PhoneNumber NVARCHAR(20) NOT NULL,
+        DateOfBirth DATETIME2 NOT NULL,
+        Position NVARCHAR(100) NOT NULL,
+        Department NVARCHAR(100) NOT NULL,
+        Status NVARCHAR(20) NOT NULL,
+
+        CreatedAt DATETIME2 NOT NULL,
+        UpdatedAt DATETIME2 NULL,
+        CreatedBy NVARCHAR(MAX) NULL,
+        UpdatedBy NVARCHAR(MAX) NULL,
+
+        CONSTRAINT PK_Employees
+            PRIMARY KEY (Id)
+    );
+
+    CREATE UNIQUE INDEX IX_Employees_EmployeeCode
+    ON dbo.Employees(EmployeeCode);
+
+    PRINT N'Đã tạo bảng Employees thành công!';
+END
+ELSE
+BEGIN
+    PRINT N'Bảng Employees đã tồn tại!';
+END
+GO
+

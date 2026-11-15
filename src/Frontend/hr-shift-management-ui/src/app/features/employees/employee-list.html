@@ -1,0 +1,193 @@
+
+<div class="page">
+  <main class="container">
+
+    <!-- Tiêu đề và nút thêm -->
+    <div class="title-row">
+      <div>
+        <h1>Quản lý nhân viên</h1>
+        <p>Quản lý và theo dõi đầy đủ hồ sơ nhân viên</p>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn-primary" (click)="openCreate()">
+          + Thêm nhân viên
+        </button>
+      </div>
+    </div>
+
+    <!-- Thông báo -->
+    <p class="success" *ngIf="successMessage">
+      {{ successMessage }}
+    </p>
+
+    <p class="error" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </p>
+
+    <!-- Danh sách nhân viên -->
+    <section class="card">
+
+      <div class="card-header">
+        <h2>Danh sách nhân viên</h2>
+      </div>
+
+      <p *ngIf="loading">Đang tải dữ liệu...</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Mã NV</th>
+              <th>Họ tên</th>
+              <th>Email</th>
+              <th>Số điện thoại</th>
+              <th>Ngày sinh</th>
+              <th>Chức vụ</th>
+              <th>Phòng ban</th>
+              <th>Trạng thái</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let employee of employees">
+              <td>{{ employee.employeeCode }}</td>
+              <td>{{ employee.fullName }}</td>
+              <td>{{ employee.email || 'Chưa cập nhật' }}</td>
+              <td>{{ employee.phoneNumber }}</td>
+              <td>{{ employee.dateOfBirth | date:'dd/MM/yyyy' }}</td>
+              <td>{{ employee.position }}</td>
+              <td>{{ employee.department }}</td>
+
+              <td>
+                <span class="status"
+                  [class.active]="employee.status === 'Active'">
+                  {{ employee.status === 'Active'
+                    ? 'Hoạt động'
+                    : employee.status }}
+                </span>
+              </td>
+
+              <td>
+                <div class="table-actions">
+                <button class="btn-edit"
+                    (click)="openEdit(employee)">
+                    Sửa
+                </button>
+
+                <button class="btn-delete"
+                    (click)="deleteEmployee(employee)">
+                    Xóa
+                </button>
+                </div>
+              </td>
+            </tr>
+
+            <tr *ngIf="!loading && employees.length === 0">
+              <td colspan="9" class="empty">
+                Chưa có nhân viên nào.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+    <!-- Form thêm / chỉnh sửa -->
+    <section class="card form-card" *ngIf="showForm">
+
+      <h2>
+        {{ editingId
+          ? 'Chỉnh sửa hồ sơ nhân viên'
+          : 'Thêm nhân viên mới' }}
+      </h2>
+
+      <form [formGroup]="employeeForm"
+            (ngSubmit)="saveEmployee()">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Mã nhân viên *</label>
+            <input
+              type="text"
+              formControlName="employeeCode"
+              placeholder="Ví dụ: NV001"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Họ và tên *</label>
+            <input
+              type="text"
+              formControlName="fullName"
+              placeholder="Nhập họ và tên"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              formControlName="email"
+              placeholder="example@gmail.com"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Số điện thoại *</label>
+            <input
+              type="text"
+              formControlName="phoneNumber"
+              placeholder="Nhập số điện thoại"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Ngày sinh *</label>
+            <input
+              type="date"
+              formControlName="dateOfBirth"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Chức vụ *</label>
+            <input
+              type="text"
+              formControlName="position"
+              placeholder="Nhập chức vụ"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Phòng ban *</label>
+            <input
+              type="text"
+              formControlName="department"
+              placeholder="Nhập phòng ban"
+            />
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+          <button type="button"
+            class="btn-cancel"
+            (click)="closeForm()">
+            Hủy
+          </button>
+
+          <button type="submit"
+            class="btn-primary">
+            {{ editingId ? 'Cập nhật nhân viên' : 'Lưu nhân viên' }}
+          </button>
+        </div>
+
+      </form>
+    </section>
+
+  </main>
+</div>
