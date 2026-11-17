@@ -1,3 +1,4 @@
+
 using HRShiftManagement.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -5,25 +6,58 @@ namespace HRShiftManagement.Infrastructure.Persistence.Context;
 
 public class ApplicationDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    public ApplicationDbContext(
+        DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
     }
 
-    public DbSet<User> Users => Set<User>();
-    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    // ============================================
+    // Quan ly tai khoan
+    // ============================================
 
-    public DbSet<Shift> Shifts => Set<Shift>();
+    public DbSet<User> Users => Set<User>();
+
+    public DbSet<RefreshToken> RefreshTokens
+        => Set<RefreshToken>();
+
+
+    // ============================================
+    // US 2.1 - Quan ly ca lam viec
+    // ============================================
+
+    public DbSet<Shift> Shifts
+        => Set<Shift>();
+
+
+    // ============================================
+    // US 2.2 - Phan nhan vien vao ca
+    // ============================================
 
     public DbSet<ShiftAssignment> ShiftAssignments
         => Set<ShiftAssignment>();
 
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    // ============================================
+    // US 1.5 & US 1.6 - Quan ly ho so nhan vien
+    // ============================================
+
+    public DbSet<EmployeeProfile> EmployeeProfiles
+        => Set<EmployeeProfile>();
+
+
+    // ============================================
+    // Cau hinh cac Entity
+    // ============================================
+
+    protected override void OnModelCreating(
+        ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        // Apply all entity configurations from this assembly
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        // Tu dong nap cac Entity Configuration
+        modelBuilder.ApplyConfigurationsFromAssembly(
+            typeof(ApplicationDbContext).Assembly
+        );
     }
 }

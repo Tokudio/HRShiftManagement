@@ -66,3 +66,101 @@ GO
 CREATE INDEX [IX_ShiftAssignments_ShiftId_WorkDate]
 ON [dbo].[ShiftAssignments] ([ShiftId], [WorkDate]);
 GO
+
+
+IF OBJECT_ID(N'dbo.Shifts', N'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.Shifts (
+        Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+        Name NVARCHAR(100) NOT NULL,
+        StartTime TIME(0) NOT NULL,
+        EndTime TIME(0) NOT NULL,
+        MinEmployees INT NOT NULL,
+        MaxEmployees INT NOT NULL,
+        CreatedAt DATETIME2 NOT NULL,
+        UpdatedAt DATETIME2 NULL,
+        CreatedBy NVARCHAR(MAX) NULL,
+        UpdatedBy NVARCHAR(MAX) NULL,
+
+        CONSTRAINT CK_Shifts_Employees
+        CHECK (
+            MinEmployees >= 1
+            AND MaxEmployees >= MinEmployees
+        ),
+
+        CONSTRAINT CK_Shifts_Time
+        CHECK (StartTime <> EndTime)
+    );
+
+    CREATE UNIQUE INDEX IX_Shifts_Name
+    ON dbo.Shifts(Name);
+END;
+GO
+
+
+IF OBJECT_ID(N'dbo.ShiftAssignments', N'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.ShiftAssignments (
+        Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+        ShiftId UNIQUEIDENTIFIER NOT NULL,
+        EmployeeId UNIQUEIDENTIFIER NOT NULL,
+        WorkDate DATE NOT NULL,
+        CreatedAt DATETIME2 NOT NULL,
+        UpdatedAt DATETIME2 NULL,
+        CreatedBy NVARCHAR(MAX) NULL,
+        UpdatedBy NVARCHAR(MAX) NULL,
+
+        CONSTRAINT FK_ShiftAssignments_Shifts
+        FOREIGN KEY (ShiftId)
+        REFERENCES dbo.Shifts(Id),
+
+        CONSTRAINT FK_ShiftAssignments_Users
+        FOREIGN KEY (EmployeeId)
+        REFERENCES dbo.Users(Id)
+    );
+
+    CREATE INDEX IX_ShiftAssignments_EmployeeId
+    ON dbo.ShiftAssignments(EmployeeId);
+
+    CREATE INDEX IX_ShiftAssignments_ShiftId_WorkDate
+    ON dbo.ShiftAssignments(ShiftId, WorkDate);
+END;
+GO
+
+
+IF OBJECT_ID(N'dbo.EmployeeProfiles', N'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.EmployeeProfiles (
+        Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+        UserId UNIQUEIDENTIFIER NULL,
+        EmployeeCode NVARCHAR(24) NOT NULL,
+        FullName NVARCHAR(200) NOT NULL,
+        PhoneNumber NVARCHAR(20) NOT NULL,
+        DateOfBirth DATE NOT NULL,
+        Position NVARCHAR(100) NOT NULL,
+        Department NVARCHAR(100) NOT NULL,
+        Email NVARCHAR(256) NULL,
+        Address NVARCHAR(300) NULL,
+        JoinedOn DATE NULL,
+        Notes NVARCHAR(2000) NULL,
+        Status NVARCHAR(30) NOT NULL,
+        CreatedAt DATETIME2 NOT NULL,
+        UpdatedAt DATETIME2 NULL,
+        CreatedBy NVARCHAR(MAX) NULL,
+        UpdatedBy NVARCHAR(MAX) NULL,
+
+        CONSTRAINT FK_EmployeeProfiles_Users
+        FOREIGN KEY (UserId)
+        REFERENCES dbo.Users(Id)
+    );
+
+    CREATE UNIQUE INDEX IX_EmployeeProfiles_EmployeeCode
+    ON dbo.EmployeeProfiles(EmployeeCode);
+
+    CREATE UNIQUE INDEX IX_EmployeeProfiles_UserId
+    ON dbo.EmployeeProfiles(UserId)
+    WHERE UserId IS NOT NULL;
+END;
+GO
+
+

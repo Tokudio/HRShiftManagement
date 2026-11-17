@@ -1,0 +1,183 @@
+<div class="manager-dashboard">
+
+  <!-- LOI CHAO -->
+  <div class="dashboard-heading">
+
+    <p class="subtitle">
+      Theo dõi nhân sự, lịch làm việc và các yêu cầu trong ngày
+    </p>
+
+    <div class="heading-row">
+      <h1>Xin chào, {{ name }} 👋</h1>
+
+      <button
+        type="button"
+        class="refresh-btn"
+        (click)="loadDashboard()"
+        [disabled]="loading">
+        ↻ Làm mới
+      </button>
+    </div>
+
+  </div>
+
+  @if (loading) {
+    <p class="info-message">
+      Đang tải dữ liệu tổng quan...
+    </p>
+  }
+
+  @if (errorMessage) {
+    <div class="error-message">
+      {{ errorMessage }}
+    </div>
+  }
+
+  @if (!loading && !errorMessage) {
+
+    <!-- CAC O THONG KE -->
+    <div class="stats-grid">
+
+      <div class="stat-card">
+        <span>Nhân viên</span>
+        <strong>{{ totalEmployees }}</strong>
+        <small>
+          {{ activeEmployees }} đang hoạt động
+        </small>
+      </div>
+
+      <div class="stat-card">
+        <span>Ca có phân công hôm nay</span>
+        <strong>{{ assignedShifts }}</strong>
+        <small>
+          Tổng {{ todayShifts.length }} ca
+        </small>
+      </div>
+
+      <div class="stat-card">
+        <span>Ca cần bổ sung nhân viên</span>
+        <strong>{{ missingShifts }}</strong>
+        <small>Chưa đạt số nhân viên tối thiểu</small>
+      </div>
+
+      <div class="stat-card">
+        <span>Tỷ lệ đúng giờ</span>
+        <strong class="no-data">—</strong>
+        <small>Chưa có dữ liệu chấm công</small>
+      </div>
+
+    </div>
+
+    <!-- NOI DUNG DASHBOARD -->
+    <div class="dashboard-grid">
+
+      <!-- LICH LAM VIEC -->
+      <section class="dashboard-card">
+
+        <div class="card-heading">
+          <h2>Lịch làm việc hôm nay</h2>
+          <small>{{ todayLabel }}</small>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Ca</th>
+                <th>Khung giờ</th>
+                <th>Nhân sự</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              @for (
+                shift of displayedShifts;
+                track shift.shiftId
+              ) {
+
+                <tr>
+                  <td>{{ shift.shiftName }}</td>
+
+                  <td>
+                    {{ formatTime(shift.startTime) }}
+                    –
+                    {{ formatTime(shift.endTime) }}
+
+                    @if (isOvernight(shift)) {
+                      <small class="overnight">
+                        (+1 ngày)
+                      </small>
+                    }
+                  </td>
+
+                  <td>
+                    {{ shift.assignedCount }}
+                    /
+                    {{ shift.maxEmployees }}
+                  </td>
+
+                  <td>
+                    <span
+                      class="status-badge"
+                      [class.success]="
+                        shift.assignedCount >=
+                        shift.minEmployees
+                      "
+                      [class.warning]="
+                        shift.assignedCount <
+                        shift.minEmployees
+                      ">
+                      {{ getShiftStatus(shift) }}
+                    </span>
+                  </td>
+                </tr>
+
+              }
+
+            </tbody>
+          </table>
+        </div>
+
+        @if (todayShifts.length === 0) {
+          <div class="empty-state">
+            Chưa có ca làm việc hôm nay.
+          </div>
+        }
+
+        <a
+          routerLink="/manager/schedule"
+          class="primary-button">
+          Xem lịch phân ca
+        </a>
+
+      </section>
+
+      <!-- YEU CAU CAN XU LY -->
+      <section class="dashboard-card">
+
+        <h2>Yêu cầu cần xử lý</h2>
+
+        <div class="request-empty">
+          <strong>Chưa có dữ liệu</strong>
+
+          <p>
+            Chức năng quản lý yêu cầu nghỉ phép và
+            đổi ca sẽ được triển khai sau.
+          </p>
+        </div>
+
+        <a
+          routerLink="/manager/shifts"
+          class="secondary-button">
+          Quản lý ca làm việc
+        </a>
+
+      </section>
+
+    </div>
+
+  }
+
+</div>
