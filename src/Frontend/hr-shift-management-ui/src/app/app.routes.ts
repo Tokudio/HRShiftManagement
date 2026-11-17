@@ -1,3 +1,4 @@
+
 import { Routes } from '@angular/router';
 import {
   authGuard,
@@ -9,64 +10,69 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () =>
-      import('./features/auth/login/login').then(
-        (m) => m.Login
-      ),
+      import('./features/auth/login/login').then(m => m.Login),
   },
   {
     path: 'register',
     loadComponent: () =>
-      import('./features/auth/register/register').then(
-        (m) => m.Register
-      ),
+      import('./features/auth/register/register').then(m => m.Register),
   },
   {
-    // US 2.1 - Quan ly ca lam viec
     path: 'shifts',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/shifts/shifts').then(
-        (m) => m.Shifts
-      ),
+      import('./features/shifts/shifts').then(m => m.Shifts),
   },
   {
-    // US 2.2 - Lich phan ca nhan vien
     path: 'schedule',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/schedule/schedule').then(
-        (m) => m.Schedule
-      ),
+      import('./features/schedule/schedule').then(m => m.Schedule),
   },
-
   {
-    // US 2.3 - Lich lam viec cua nhan vien
     path: 'my-schedule',
     canActivate: [employeeGuard],
     loadComponent: () =>
-      import('./features/my-schedule/my-schedule').then(
-        (m) => m.MySchedule
-      ),
+      import('./features/my-schedule/my-schedule').then(m => m.MySchedule),
   },
-
-
   {
     path: 'home',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/home/home').then(
-        (m) => m.Home
-      ),
+      import('./features/home/home').then(m => m.Home),
   },
+
+  // ADMIN WORKSPACE
   {
-    // Trang quan ly nguoi dung - Admin
-    path: 'admin/users',
+    path: 'admin',
     canActivate: [adminGuard],
     loadComponent: () =>
-      import('./features/Admin/user/users').then(
-        (m) => m.Users
+      import('./features/Admin/layout/admin-layout').then(
+        m => m.AdminLayout
       ),
+    children: [
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full',
+      },
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./features/Admin/dashboard/dashboard').then(
+            m => m.Dashboard
+          ),
+      },
+      {
+        path: 'users',
+        loadComponent: () =>
+          import('./features/Admin/user/users').then(
+            m => m.Users
+          ),
+      },
+    ],
   },
+
   {
     path: '',
     redirectTo: 'login',
