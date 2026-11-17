@@ -1,0 +1,186 @@
+<section class="employee-page">
+
+  <div class="page-intro">
+    <p>Quản lý hồ sơ nhân viên và trạng thái làm việc</p>
+  </div>
+
+  <div class="panel">
+
+    <div class="panel-title">
+      <div>
+        <h2>Danh sách nhân viên</h2>
+        <small>Hiện có {{ employees.length }} hồ sơ nhân viên</small>
+      </div>
+
+      <a
+        class="btn primary"
+        routerLink="/manager/employees/new">
+        + Thêm nhân viên
+      </a>
+    </div>
+
+    @if (successMessage) {
+      <div class="notice success" role="status">
+        {{ successMessage }}
+        <button
+          type="button"
+          (click)="successMessage = ''"
+          aria-label="Đóng thông báo">×</button>
+      </div>
+    }
+
+    <!-- BO LOC -->
+    <div class="filters">
+
+      <div class="field">
+        <label for="employee-search">Tìm kiếm</label>
+        <input
+          id="employee-search"
+          type="search"
+          [(ngModel)]="keyword"
+          placeholder="Mã NV / họ tên / email" />
+      </div>
+
+      <div class="field">
+        <label for="department-filter">Phòng ban</label>
+
+        <select
+          id="department-filter"
+          [(ngModel)]="selectedDepartment">
+
+          <option value="">Tất cả phòng ban</option>
+
+          @for (department of departments; track department) {
+            <option [value]="department">
+              {{ department }}
+            </option>
+          }
+
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="status-filter">Trạng thái</label>
+
+        <select
+          id="status-filter"
+          [(ngModel)]="selectedStatus">
+
+          <option value="">Tất cả trạng thái</option>
+          <option value="Active">Đang làm</option>
+          <option value="Inactive">Tạm nghỉ</option>
+          <option value="Locked">Đã khóa</option>
+        </select>
+      </div>
+
+      <button
+        class="btn"
+        type="button"
+        (click)="clearFilters()">
+        Xóa lọc
+      </button>
+
+      <button
+        class="btn"
+        type="button"
+        (click)="loadEmployees()"
+        [disabled]="loading">
+        Làm mới
+      </button>
+
+    </div>
+
+    @if (errorMessage) {
+      <div class="notice error" role="alert">
+        {{ errorMessage }}
+      </div>
+    }
+
+    @if (loading) {
+
+      <p class="empty">Đang tải danh sách nhân viên...</p>
+
+    } @else {
+
+      <div class="table-scroll">
+        <table>
+
+          <thead>
+            <tr>
+              <th>Mã NV</th>
+              <th>Họ tên</th>
+              <th>Chức vụ</th>
+              <th>Phòng ban</th>
+              <th>Điện thoại</th>
+              <th>Trạng thái</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (employee of filteredEmployees; track employee.id) {
+
+              <tr>
+                <td>{{ employee.employeeCode }}</td>
+
+                <td>
+                  <strong>{{ employee.fullName }}</strong>
+
+                  @if (!employee.isProfileComplete) {
+                    <small class="incomplete">
+                      Cần bổ sung hồ sơ
+                    </small>
+                  }
+                </td>
+
+                <td>{{ employee.position || '—' }}</td>
+                <td>{{ employee.department || '—' }}</td>
+                <td>{{ employee.phoneNumber || '—' }}</td>
+
+                <td>
+                  <span
+                    class="status"
+                    [class.active]="employee.status === 'Active'"
+                    [class.inactive]="employee.status === 'Inactive'">
+
+                    {{ getStatusLabel(employee.status) }}
+                  </span>
+                </td>
+
+                <td>
+                  <a
+                    class="edit-link"
+                    [routerLink]="[
+                      '/manager/employees',
+                      employee.id,
+                      'edit'
+                    ]">
+                    Xem · Sửa
+                  </a>
+                </td>
+              </tr>
+
+            } @empty {
+
+              <tr>
+                <td colspan="7" class="empty">
+                  Không tìm thấy nhân viên phù hợp.
+                </td>
+              </tr>
+
+            }
+          </tbody>
+
+        </table>
+      </div>
+
+      <p class="footnote">
+        Hiển thị {{ filteredEmployees.length }} /
+        {{ employees.length }} nhân viên.
+        Hồ sơ chưa liên kết tài khoản chưa thể đăng nhập
+        hoặc được phân ca.
+      </p>
+    }
+
+  </div>
+</section>
