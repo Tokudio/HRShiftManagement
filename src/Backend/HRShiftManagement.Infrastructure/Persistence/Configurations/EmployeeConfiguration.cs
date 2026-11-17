@@ -19,6 +19,18 @@ public class EmployeeConfiguration
 
         builder.HasKey(e => e.Id);
 
+        builder.Property(e => e.UserId)
+            .IsRequired(false);
+
+        builder.HasOne(e => e.User)
+            .WithOne()
+            .HasForeignKey<Employee>(e => e.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.HasIndex(e => e.UserId)
+            .IsUnique()
+            .HasFilter("[UserId] IS NOT NULL");
+
         builder.Property(e => e.EmployeeCode)
             .IsRequired()
             .HasMaxLength(30);

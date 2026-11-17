@@ -24,5 +24,9 @@ namespace HRShiftManagement.Domain.Entities
         public string Department { get; set; } = string.Empty;
 
         public string Status { get; set; } = "Active";
+
+        public Guid? UserId { get; set; }
+
+        public User? User { get; set; }
     }
 }
