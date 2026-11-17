@@ -1,0 +1,188 @@
+:host {
+  display: block;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: #1d2943;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.page-description {
+  color: #8c98ab;
+  font-size: 13px;
+  margin: 0 0 20px;
+}
+
+.panel {
+  padding: 24px;
+  min-height: 460px;
+  background: #fff;
+  border: 1px solid #e4e9f1;
+  border-radius: 12px;
+}
+
+.panel h2 {
+  margin: 0 0 22px;
+  font-size: 17px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.field label {
+  font-size: 12px;
+  font-weight: 650;
+  color: #3b475b;
+}
+
+.field label span {
+  color: #ed514b;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 39px;
+  padding: 10px 12px;
+  background: #fff;
+  color: #334155;
+  border: 1px solid #dce3ed;
+  border-radius: 7px;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: 2px solid #dcd8ff;
+  border-color: #7b72ee;
+}
+
+.field input:disabled {
+  background: #f5f7fa;
+  color: #8994a6;
+}
+
+.field input.ng-invalid.ng-touched,
+.field select.ng-invalid.ng-touched {
+  border-color: #df4444;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.hint {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #d28113;
+  margin: 18px 0;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 39px;
+  padding: 9px 19px;
+  border: 1px solid #dae2ed;
+  border-radius: 7px;
+  background: #fff;
+  color: #384355;
+  font-weight: 650;
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn.primary {
+  background: #5146e5;
+  border-color: #5146e5;
+  color: #fff;
+}
+
+.btn:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.btn:not(:disabled):hover {
+  filter: brightness(.96);
+}
+
+.notice {
+  margin: 16px 0 0;
+  padding: 12px;
+  border-radius: 7px;
+  font-size: 13px;
+}
+
+.notice.error {
+  background: #fff0f0;
+  color: #c43131;
+}
+
+.notice.success {
+  background: #e9f8ef;
+  color: #167d44;
+}
+
+.message {
+  color: #8190a6;
+  font-size: 13px;
+}
+
+.field-error {
+  font-size: 11px;
+  color: #cc3030;
+  line-height: 1.5;
+}
+
+@media (max-width: 1000px) {
+  .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .panel {
+    padding: 16px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width {
+    grid-column: auto;
+  }
+
+  .actions {
+    flex-wrap: wrap;
+  }
+}

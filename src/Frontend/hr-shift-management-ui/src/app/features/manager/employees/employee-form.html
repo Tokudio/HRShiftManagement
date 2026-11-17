@@ -1,0 +1,266 @@
+<section class="employee-page">
+
+  <p class="page-description">
+    Kiểm tra trường bắt buộc và định dạng trước khi lưu
+  </p>
+
+  <div class="panel">
+
+    <h2>
+      {{ employeeId
+        ? 'Chỉnh sửa hồ sơ nhân viên'
+        : 'Tạo hồ sơ nhân viên' }}
+    </h2>
+
+    @if (loading) {
+
+      <p class="message">
+        Đang tải thông tin nhân viên...
+      </p>
+
+    } @else {
+
+      <form
+        #employeeForm="ngForm"
+        (ngSubmit)="save()"
+        novalidate>
+
+        <div class="form-grid">
+
+          <!-- HO TEN -->
+          <div class="field">
+            <label for="fullName">
+              Họ và tên <span>*</span>
+            </label>
+
+            <input
+              id="fullName"
+              name="fullName"
+              [(ngModel)]="form.fullName"
+              required
+              minlength="2"
+              maxlength="200"
+              placeholder="Nguyễn Văn An" />
+          </div>
+
+          <!-- SO DIEN THOAI -->
+          <div class="field">
+            <label for="phoneNumber">
+              Số điện thoại <span>*</span>
+            </label>
+
+            <input
+              id="phoneNumber"
+              name="phoneNumber"
+              type="tel"
+              [(ngModel)]="form.phoneNumber"
+              #phoneModel="ngModel"
+              required
+              pattern="0[0-9]{9}"
+              maxlength="10"
+              placeholder="0912345678" />
+
+            @if (
+              phoneModel.invalid &&
+              (phoneModel.touched || phoneModel.dirty)
+            ) {
+              <small class="field-error">
+                Số điện thoại phải có 10 chữ số,
+                bắt đầu bằng 0.
+              </small>
+            }
+          </div>
+
+          <!-- EMAIL -->
+          <div class="field">
+            <label for="email">
+              Email {{ linkedAccount ? '*' : '' }}
+            </label>
+
+            <input
+              id="email"
+              name="email"
+              type="email"
+              [(ngModel)]="form.email"
+              #emailModel="ngModel"
+              [required]="linkedAccount"
+              email
+              maxlength="256"
+              placeholder="name@company.com" />
+
+            @if (
+              emailModel.invalid &&
+              (emailModel.touched || emailModel.dirty)
+            ) {
+              <small class="field-error">
+                Email không đúng định dạng
+                hoặc đang bị để trống.
+              </small>
+            }
+          </div>
+
+          <!-- NGAY SINH -->
+          <div class="field">
+            <label for="dateOfBirth">
+              Ngày sinh <span>*</span>
+            </label>
+
+            <input
+              id="dateOfBirth"
+              name="dateOfBirth"
+              type="date"
+              [(ngModel)]="form.dateOfBirth"
+              [max]="today"
+              required />
+          </div>
+
+          <!-- CHUC VU -->
+          <div class="field">
+            <label for="position">
+              Chức vụ <span>*</span>
+            </label>
+
+            <input
+              id="position"
+              name="position"
+              [(ngModel)]="form.position"
+              required
+              maxlength="100"
+              placeholder="Nhân viên bán hàng" />
+          </div>
+
+          <!-- PHONG BAN -->
+          <div class="field">
+            <label for="department">
+              Phòng ban <span>*</span>
+            </label>
+
+            <select
+              id="department"
+              name="department"
+              [(ngModel)]="form.department"
+              required>
+
+              <option value="">
+                Chọn phòng ban
+              </option>
+
+              @for (
+                department of departments;
+                track department
+              ) {
+                <option [value]="department">
+                  {{ department }}
+                </option>
+              }
+
+            </select>
+          </div>
+
+          <!-- MA NHAN VIEN -->
+          <div class="field">
+            <label for="employeeCode">
+              Mã nhân viên
+            </label>
+
+            <input
+              id="employeeCode"
+              [value]="employeeCode"
+              disabled />
+          </div>
+
+          <!-- DIA CHI -->
+          <div class="field">
+            <label for="address">
+              Địa chỉ
+            </label>
+
+            <input
+              id="address"
+              name="address"
+              [(ngModel)]="form.address"
+              maxlength="300"
+              placeholder="Nhập địa chỉ" />
+          </div>
+
+          <!-- NGAY VAO LAM -->
+          <div class="field">
+            <label for="joinedOn">
+              Ngày vào làm
+            </label>
+
+            <input
+              id="joinedOn"
+              name="joinedOn"
+              type="date"
+              [(ngModel)]="form.joinedOn"
+              [max]="today" />
+          </div>
+
+          <!-- GHI CHU -->
+          <div class="field full-width">
+            <label for="notes">
+              Ghi chú
+            </label>
+
+            <textarea
+              id="notes"
+              name="notes"
+              [(ngModel)]="form.notes"
+              maxlength="2000"
+              rows="3"
+              placeholder="Thông tin bổ sung..."></textarea>
+          </div>
+
+        </div>
+
+        <!-- HUONG DAN -->
+        <p class="hint">
+          * Bắt buộc: họ tên, số điện thoại,
+          ngày sinh, chức vụ và phòng ban.
+          Email (nếu có) và số điện thoại
+          phải đúng định dạng.
+        </p>
+
+        <!-- THONG BAO LOI -->
+        @if (errorMessage) {
+          <div class="notice error" role="alert">
+            {{ errorMessage }}
+          </div>
+        }
+
+        <!-- THONG BAO THANH CONG -->
+        @if (successMessage) {
+          <div class="notice success" role="status">
+            {{ successMessage }}
+          </div>
+        }
+
+        <!-- CAC NUT -->
+        <div class="actions">
+
+          <button
+            type="submit"
+            class="btn primary"
+            [disabled]="saving">
+
+            {{ saving
+              ? 'Đang lưu...'
+              : 'Lưu hồ sơ' }}
+          </button>
+
+          <a
+            routerLink="/manager/employees"
+            class="btn">
+            Hủy / Quay lại
+          </a>
+
+        </div>
+
+      </form>
+
+    }
+
+  </div>
+
+</section>

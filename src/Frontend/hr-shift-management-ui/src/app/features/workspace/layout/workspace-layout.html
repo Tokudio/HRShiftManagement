@@ -1,0 +1,86 @@
+<div class="workmate-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="brand">
+      <h2>WORKMATE</h2>
+      <span>EMPLOYEE MANAGEMENT</span>
+    </div>
+
+    <div class="menu-title">
+      {{ role === 'manager'
+        ? 'MANAGER WORKSPACE'
+        : 'EMPLOYEE WORKSPACE' }}
+    </div>
+
+    <nav class="sidebar-menu">
+
+      @for (item of links; track item.label) {
+
+        @if (item.path) {
+          <a
+            [routerLink]="item.path"
+            routerLinkActive="active"
+            class="menu-item">
+
+            <span>{{ item.label }}</span>
+          </a>
+        } @else {
+          <span class="menu-item disabled">
+            {{ item.label }}
+          </span>
+        }
+
+      }
+
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="avatar">
+        {{ initials }}
+      </div>
+
+      <div class="user-info">
+        <strong>{{ name }}</strong>
+        <small>{{ role === 'manager'
+          ? 'Manager'
+          : 'Employee' }}</small>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-area">
+
+    <header class="topbar">
+
+      <div>
+        <small>
+          Workspace / {{ title }}
+        </small>
+
+        <h2>{{ title }}</h2>
+      </div>
+
+      <div class="header-actions">
+        <span class="help-icon">?</span>
+
+        <button
+          type="button"
+          class="logout-btn"
+          (click)="logout()">
+          Đăng xuất
+        </button>
+      </div>
+
+    </header>
+
+    <main class="page-content">
+      <router-outlet></router-outlet>
+    </main>
+
+  </div>
+
+</div>
