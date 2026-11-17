@@ -1,0 +1,174 @@
+
+<div class="dashboard">
+
+  <div class="dashboard-heading">
+    <div>
+      <span class="eyebrow">WORKSPACE / TỔNG QUAN ADMIN</span>
+      <h1>Tổng quan Admin</h1>
+      <p>Tổng quan trạng thái tài khoản và hoạt động hệ thống</p>
+    </div>
+
+    <button class="refresh-button"
+            type="button"
+            (click)="loadDashboard()"
+            [disabled]="isLoading">
+      ↻ Làm mới
+    </button>
+  </div>
+
+  <h2 class="welcome">Xin chào, Admin 👋</h2>
+
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="loading" *ngIf="isLoading">
+    Đang tải dữ liệu...
+  </div>
+
+  <ng-container *ngIf="!isLoading && !errorMessage">
+
+    <!-- Statistics -->
+    <div class="stats-grid">
+
+      <div class="stat-card">
+        <div class="stat-top">
+          <span>Tài khoản</span>
+          <span class="stat-icon blue">●</span>
+        </div>
+        <h2>{{ totalUsers }}</h2>
+        <span class="stat-description">Tổng số tài khoản</span>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-top">
+          <span>Đang hoạt động</span>
+          <span class="stat-icon green">●</span>
+        </div>
+        <h2>{{ activeUsers }}</h2>
+        <span class="stat-description">Tài khoản hoạt động</span>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-top">
+          <span>Đang khóa</span>
+          <span class="stat-icon red">●</span>
+        </div>
+        <h2>{{ lockedUsers }}</h2>
+        <span class="stat-description">Tài khoản bị khóa</span>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-top">
+          <span>Vai trò</span>
+          <span class="stat-icon cyan">●</span>
+        </div>
+        <h2>{{ totalRoles }}</h2>
+        <span class="stat-description">Các vai trò trong hệ thống</span>
+      </div>
+
+    </div>
+
+    <!-- Dashboard content -->
+    <div class="dashboard-grid">
+
+      <!-- User list -->
+      <section class="panel recent-panel">
+
+        <div class="panel-header">
+          <h3>Tài khoản trong hệ thống</h3>
+          <span>{{ totalUsers }} tài khoản</span>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Người dùng</th>
+                <th>Vai trò</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let user of recentUsers">
+                <td>
+                  <div class="user-cell">
+                    <div class="user-avatar">
+                      {{ user.fullName.charAt(0).toUpperCase() }}
+                    </div>
+                    <div>
+                      <strong>{{ user.fullName }}</strong>
+                      <span>{{ user.email }}</span>
+                    </div>
+                  </div>
+                </td>
+
+                <td>{{ user.role }}</td>
+
+                <td>
+                  <span class="status"
+                        [ngClass]="user.status.toLowerCase()">
+                    {{ getStatusLabel(user.status) }}
+                  </span>
+                </td>
+              </tr>
+
+              <tr *ngIf="users.length === 0">
+                <td colspan="3" class="empty">
+                  Chưa có tài khoản nào.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+
+      <!-- Role overview -->
+      <section class="panel role-panel">
+
+        <h3>Tổng quan quyền truy cập</h3>
+
+        <div class="role-item">
+          <div class="role-label">
+            <strong>Admin</strong>
+            <span>{{ adminCount }}</span>
+          </div>
+          <div class="progress">
+            <div class="progress-fill admin"
+                 [style.width.%]="getPercentage(adminCount)">
+            </div>
+          </div>
+        </div>
+
+        <div class="role-item">
+          <div class="role-label">
+            <strong>Manager</strong>
+            <span>{{ managerCount }}</span>
+          </div>
+          <div class="progress">
+            <div class="progress-fill manager"
+                 [style.width.%]="getPercentage(managerCount)">
+            </div>
+          </div>
+        </div>
+
+        <div class="role-item">
+          <div class="role-label">
+            <strong>Employee</strong>
+            <span>{{ employeeCount }}</span>
+          </div>
+          <div class="progress">
+            <div class="progress-fill employee"
+                 [style.width.%]="getPercentage(employeeCount)">
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </ng-container>
+
+</div>
